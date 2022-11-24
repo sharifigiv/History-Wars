@@ -1,5 +1,3 @@
-from pyray import physics_add_force, PhysicsBodyData, create_physics_body_rectangle, get_physics_bodies_count, get_physics_body, get_physics_shape_vertices_count, get_physics_shape_vertex, Vector2
-
 class Player:
     def __init__(self, x, y):
         self.x = x
@@ -12,9 +10,11 @@ class Player:
         self.acc = [0, 0]
 
         self.health = 100
+        
+        self.range = 40
 
-    def attack(self):
-        pass
+    def attack(self, en):
+        en.health -= 5
 
     def move(self, x, y):
         self.x += x
@@ -36,3 +36,6 @@ class Player:
         
         if self.y <= 0:
             self.y = 0
+
+
+
