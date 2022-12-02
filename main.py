@@ -6,19 +6,35 @@ from player import Player
 from enemy import Enemy
 
 pr.init_window(1080, 720, "History Wars")
-pr.init_physics()
+pr.init_audio_device()
 
-canvas = pr.load_render_texture(1080, 720)
+miumen = Player(900, 720)
 
+roman_img = pr.load_image("assets/images/roman_solder.png")
+character_img = pr.load_image("assets/images/character-cloths.png")
 
-miumen = Player(680, 720)
+pr.image_resize(roman_img, int(roman_img.width // 2), int(roman_img.height // 2))
+pr.image_resize(character_img, int(character_img.width // 1.87), int(character_img.height // 1.87))
+
+print(character_img.width, character_img.height)
+
+roman_tx = pr.load_texture_from_image(roman_img)
+character_tx = pr.load_texture_from_image(character_img)
+
+pr.unload_image(roman_img)
+pr.unload_image(character_img)
+
+sword_sfx = pr.load_sound("assets/sounds/sword.mp3")
 
 Enemies = []
 
-n = random.randint(5, 5)
+n = 1
 
 for i in range (1, n + 1):
-    Enemies.append(Enemy(i * 70, 720 - 70, miumen))
+    en = Enemy(i * 25, 720 - 70, miumen)
+    en.attack_sound = sword_sfx
+
+    Enemies.append(en)
 
 old_time = time.time()
 
@@ -55,7 +71,6 @@ while not pr.window_should_close():
                         if i[0] < m:
                             g = i[1]
 
-
                     miumen.attack(g)
 
             else:
@@ -76,38 +91,31 @@ while not pr.window_should_close():
                         if i[0] < m:
                             g = i[1]
 
-
                     miumen.attack(g)
 
         if dKey:
-            miumen.move(0.15, 0)
+            miumen.move(0.11, 0)
 
         elif aKey:
-            miumen.move(-0.15, 0)
+            miumen.move(-0.11, 0)
 
         if spaceKey == 32:
-            miumen.move(0, -300)
-
-        miumen.update(dt, Enemies)
+            miumen.jump(300)
 
         pr.clear_background(pr.WHITE)
 
-        pr.begin_texture_mode(canvas)
-        pr.set_texture_filter(canvas.texture, 0)
         pr.end_texture_mode()
         pr.begin_drawing()   
 
-        Player_Rec = pr.Rectangle(miumen.x, miumen.y, 30, 90)
-        pr.draw_rectangle_lines_ex(Player_Rec, 5.0, pr.BLACK)
+        miumen.update(dt, Enemies)
 
         for en in Enemies:
             en.update(Enemies)
-            
-            Enemy_Rec = pr.Rectangle(en.x, en.y, en.width, en.height)
-            pr.draw_rectangle_lines_ex(Enemy_Rec, 5.0, pr.RED) 
-            pr.draw_text(str(en.health), int(en.x + (en.width // 2)), int(en.y - 10), 10, pr.BLACK)
+
+            pr.draw_texture(roman_tx, int(en.x), int(en.y - 55), pr.WHITE)            
 
         pr.draw_text(str(miumen.health), 20, 30, 22, pr.BLACK)
+        pr.draw_texture(character_tx, int(miumen.x), int(miumen.y), pr.WHITE)
 
         pr.end_drawing()
 
