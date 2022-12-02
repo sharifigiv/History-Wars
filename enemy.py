@@ -1,4 +1,4 @@
-from pyray import Rectangle, Vector2, check_collision_recs, get_collision_rec
+from pyray import Rectangle, play_sound, check_collision_recs
 import time
 
 class Enemy:
@@ -7,21 +7,32 @@ class Enemy:
         self.y = y
 
         self.p = p
-        self.speed = 0.095
+        self.speed = 0.045
         self.health = 70
 
-        self.width = 30.0
-        self.height = 70.0
+        self.width = 61.0
+        self.height = 136.0
 
         self.range = 50
         self.damage = 10
+        self.knockback = 200
 
         self.cooldown = False
         self.cooldown_count = 0
         self.cooldown_time = 2
 
+        self.attack_sound = ""
+
     def attack (self):
         self.p.health -= self.damage
+
+        if self.p.x > self.x:
+            self.p.knockback(self.knockback, 1)
+
+        else:
+            self.p.knockback(self.knockback, -1)
+
+        play_sound(self.attack_sound)
 
     def collision(self, ens, step):
         Colide = False
@@ -79,7 +90,3 @@ class Enemy:
 
                 new_time = 0
                 self.cooldown_count = 0
-
-                
-                        
-
