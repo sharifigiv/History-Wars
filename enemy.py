@@ -21,6 +21,8 @@ class Enemy:
         self.cooldown_count = 0
         self.cooldown_time = 2
 
+        self.stop = False
+
         self.attack_sound = ""
 
     def attack (self):
@@ -58,11 +60,12 @@ class Enemy:
             return True
 
     def update(self, ens):
-        if self.p.x > self.x and self.p.x - self.x > self.p.width + 2 and not self.collision(ens, False):
-            self.x += self.speed
+        if not self.stop:
+            if self.p.x > self.x and self.p.x - self.x > self.p.width + 2 and not self.collision(ens, False):
+                self.x += self.speed
 
-        if self.p.x < self.x and self.x - self.p.x > self.p.width + 2 and not self.collision(ens, True):
-            self.x -= self.speed
+            if self.p.x < self.x and self.x - self.p.x > self.p.width + 2 and not self.collision(ens, True):
+                self.x -= self.speed
 
         if self.health <= 0:
             self.x = 10000
@@ -83,10 +86,9 @@ class Enemy:
 
         if self.cooldown:
             new_time = time.time()
-            # print(new_time - self.cooldown_count)
 
             if (new_time - self.cooldown_count) >= self.cooldown_time:
                 self.cooldown = False
 
                 new_time = 0
-                self.cooldown_count = 0
+                self.cooldown_count = 0     
