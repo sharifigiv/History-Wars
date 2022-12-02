@@ -28,6 +28,14 @@ class Player:
     def attack(self, en):
         en.health -= 5
 
+        if en.x > self.x:
+            en.x += 100
+            en.stop = True
+
+        else:
+            en.x -= 100
+            en.stop = True
+
     def move(self, x, y):
         if x < self.x:
             self.flip = -1
@@ -81,11 +89,11 @@ class Player:
                 self.knockback_rate = 0
                 self.knockback_direction = 1
 
-        if self.y < 720:
+        if self.y < 705:
             self.move(0, 0.098)
 
-        if self.y >= 720 - self.height:
-            self.y = 720 - self.height
+        if self.y >= 705 - self.height:
+            self.y = 705 - self.height
 
         if self.x >= 1080 - self.width:
             self.x = 1080 - self.width
